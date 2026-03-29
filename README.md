@@ -1,11 +1,5 @@
 # Replication_Scratch
-A basic, simplified implementation of some concepts in chapters 3, 4, 5 of the book "Designing Data Intensive Applications"
-
-# replication-lab
-
-A from-scratch implementation of leader-follower database replication in Go, built while working through [Designing Data-Intensive Applications](https://dataintensive.net/) by Martin Kleppmann.
-
-This is not a tutorial reproduction. It is a working distributed system — five components that talk to each other over HTTP, handle crashes, enforce consistency guarantees, and fail over automatically when the leader dies.
+A basic, from-scratch implementation of a leader-follower database replication in Go.  It is built while working through some concepts in chapters 3, 4, 5 of the book "Designing Data Intensive Applications". 
 
 ---
 
@@ -149,7 +143,7 @@ curl -c cookies.txt -X PUT http://localhost:8082/keys/user:2 \
 
 **Failure detection threshold.** The health checker requires three consecutive failed health checks before declaring the leader dead and initiating promotion. A single failed check could be a transient network hiccup. The tradeoff is detection latency: at a 5-second check interval with a threshold of 3, failover takes up to 15 seconds. Lowering the threshold risks false positives — promoting a follower when the leader is merely slow, which causes split-brain.
 
-**Split-brain is not prevented, only demonstrated.** If the old leader comes back after a follower is promoted, two nodes will accept writes simultaneously and their WALs will diverge. The test `TestSplitBrainObservation` demonstrates this explicitly — you can see two nodes with different data at the same logical point in time. Preventing this requires fencing tokens or a consensus protocol like Raft. This project shows clearly why those mechanisms exist.
+**Split-brain is not prevented, only demonstrated.** If the old leader comes back after a follower is promoted, two nodes will accept writes simultaneously and their WALs will diverge. The test `TestSplitBrainObservation` demonstrates this explicitly — you can see two nodes with different data at the same logical point in time. Preventing this requires fencing tokens or a consensus protocol like Raft. 
 
 ---
 
@@ -170,39 +164,38 @@ go test -v ./healthcheck/...
 go test -v ./healthcheck/... -run TestSplitBrainObservation
 ```
 
-Expected output:
-```
-ok      wal_scratch/wal           0.004s
-ok      wal_scratch/leader        0.667s
-ok      wal_scratch/follower      0.312s
-ok      wal_scratch/router        0.451s
-ok      wal_scratch/healthcheck   0.419s
-?       wal_scratch/cmd           [no test files]
-```
 
 ---
 
 ## Project structure
 
 ```
-replication-lab/
-├── cmd/
-│   └── main.go          — entry point, role-based startup (leader/follower/router)
-├── wal/
-│   ├── wal.go           — append-only write-ahead log
-│   └── wal_test.go
-├── leader/
-│   ├── server.go        — HTTP server backed by WAL + in-memory store
-│   └── server_test.go
-├── follower/
-│   ├── server.go        — replication loop, read-only API, promotion
-│   └── server_test.go
-├── router/
-│   ├── router.go        — session tokens, backend selection, reverse proxy
-│   └── router_test.go
-└── healthcheck/
-    ├── checker.go       — health polling, follower election, promotion
-    └── checker_test.go
+.
+├── cmd
+│   └── main.go
+├── cookies.txt
+├── follower
+│   ├── server_test.go
+│   └── server.go
+├── follower.log
+├── go.mod
+├── healthcheck
+│   ├── checker_test.go
+│   └── checker.go
+├── leader
+│   ├── server_test.go
+│   └── server.go
+├── leader.log
+├── README.md
+├── router
+│   ├── router_test.go
+│   └── router.go
+└── wal
+    ├── wal_test.go
+    └── wal.go
+
+7 directories, 16 files
+
 ```
 
 ---
