@@ -1,0 +1,8 @@
+{"offset":0,"op":"set","key":"user:1","value":"alice","timestamp":"2026-03-28T01:01:30.73411+08:00"}
+{"offset":1,"op":"set","key":"user:1","value":"alice","timestamp":"2026-03-28T01:04:34.207886+08:00"}
+{"offset":2,"op":"set","key":"user:1","value":"v1","timestamp":"2026-03-28T01:05:15.998673+08:00"}
+{"offset":3,"op":"set","key":"user:1","value":"v2","timestamp":"2026-03-28T01:05:16.015618+08:00"}
+{"offset":4,"op":"set","key":"user:1","value":"v3","timestamp":"2026-03-28T01:05:16.028934+08:00"}
+{"offset":5,"op":"set","key":"user:1","value":"alice","timestamp":"2026-03-29T01:00:28.605767+08:00"}
+{"offset":6,"op":"set","key":"user:1","value":"alice","timestamp":"2026-03-29T01:00:38.132835+08:00"}
+{"offset":7,"op":"set","key":"user:1","value":"bob","timestamp":"2026-03-29T01:01:01.24931+08:00"}
